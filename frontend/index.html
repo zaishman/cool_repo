@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Debate Judge Assistant</title>
+<link rel="stylesheet" href="styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Persistent top bar. Hidden on the landing view by CSS. -->
+  <header id="topbar" class="topbar">
+    <div class="topbar-left">
+      <span class="wordmark">Debate Judge Assistant</span>
+    </div>
+    <div class="topbar-right">
+      <span id="backend-status" class="status-pill status-pill--unknown">
+        <span class="status-dot"></span><span id="backend-status-text">Checking backend…</span>
+      </span>
+    </div>
+  </header>
+
+  <main>
+
+  <!-- ---------- LANDING ---------- -->
+  <div class="landing-content">
+    <p class="landing-eyebrow">An academic scoring assistant</p>
+    <h1>Debate Judge Assistant</h1>
+    <div class="title-rule"></div>
+      <h1>Debate Judge Assistant</h1>
+      <p class="tagline">
+        An AI-assisted scoring tool that analyzes delivery, argumentation, and
+        structure from a recorded debate speech — helping judges score more
+        consistently and fairly. Upload or record a speech to get a full
+        breakdown: vocal delivery, argument validity, refutation strength, and
+        format compliance, all in one report.
+      </p>
+      <button id="get-started-btn" class="btn btn--primary btn--lg">Get started</button>
+      <p id="landing-hint" class="landing-hint"></p>
+    </div>
+  </section>
+
+  <!-- ---------- REPORT LIBRARY ---------- -->
+  <section id="library-view" class="view">
+    <div class="page">
+      <div class="page-head">
+        <div>
+          <h2 class="page-title">Your reports</h2>
+          <p id="library-sub" class="page-sub"></p>
+        </div>
+        <div class="page-head-actions">
+          <button id="clear-all-btn" class="btn btn--ghost btn--sm" hidden>Clear all</button>
+          <button id="new-analysis-btn" class="btn btn--primary">New analysis</button>
+        </div>
+      </div>
+
+      <div id="reports-list" class="reports-list"></div>
+
+      <div id="empty-state" class="empty-state">
+        <p class="empty-state-title">No reports yet</p>
+        <p class="empty-state-body">Analyze a speech to see delivery, argumentation and structure scores here.</p>
+        <button id="empty-new-btn" class="btn btn--primary">Analyze a speech</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- SETUP: position + source, one screen ---------- -->
+  <section id="setup-view" class="view">
+    <div class="page page--narrow">
+      <button class="btn btn--back" data-goto="library-view">← Reports</button>
+      <h2 class="page-title">New analysis</h2>
+      <p class="page-sub">Pick the speech slot, then upload a recording or record one now.</p>
+
+      <div class="field">
+        <label class="field-label" for="position-select">Speech position</label>
+        <div id="position-picker" class="segmented" role="radiogroup" aria-label="Speech position"></div>
+        <select id="position-select" class="visually-hidden" tabindex="-1" aria-hidden="true"></select>
+        <p id="position-rules" class="field-help"></p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="label-input">Label <span class="field-optional">optional</span></label>
+        <input id="label-input" class="text-input" type="text" maxlength="80"
+               placeholder="e.g. Round 3 — Sugary drinks ban" autocomplete="off">
+        <p class="field-help">Only used to name the report in your list.</p>
+      </div>
+
+      <div class="field">
+        <span class="field-label">Recording</span>
+        <div id="dropzone" class="dropzone" tabindex="0" role="button"
+             aria-label="Choose a video or audio file, or drop one here">
+          <p class="dropzone-title">Drop a video or audio file here</p>
+          <p class="dropzone-body">or <span class="link-ish">browse your files</span></p>
+          <p class="dropzone-formats">.mov · .mp4 · .m4a · .wav · .webm</p>
+        </div>
+        <input type="file" id="file-input" accept="video/*,audio/*" hidden>
+        <div class="or-row"><span class="or-line"></span><span class="or-text">or</span><span class="or-line"></span></div>
+        <button id="choose-record-btn" class="btn btn--secondary btn--block">Record with camera &amp; mic</button>
+      </div>
+
+      <p class="note">
+        Video files get face and posture analysis. Audio-only files still get the
+        full transcript, delivery and argumentation breakdown.
+      </p>
+    </div>
+  </section>
+
+  <!-- ---------- RECORDING ---------- -->
+  <section id="record-view" class="view">
+    <div class="page page--narrow">
+      <h2 class="page-title">Record speech</h2>
+      <p id="record-position-note" class="page-sub"></p>
+
+      <div class="preview-wrap">
+        <video id="live-preview" autoplay muted playsinline></video>
+        <div id="rec-badge" class="rec-badge" hidden><span class="rec-dot"></span><span id="rec-timer">0:00</span></div>
+      </div>
+
+      <p id="record-error" class="inline-error" hidden></p>
+
+      <div class="record-controls">
+        <button id="start-record-btn" class="btn btn--primary btn--block">Start recording</button>
+        <button id="stop-record-btn" class="btn btn--danger btn--block" hidden>Stop &amp; analyze</button>
+      </div>
+      <button id="record-cancel-btn" class="btn btn--ghost btn--block">Cancel</button>
+    </div>
+  </section>
+
+  <!-- ---------- PROCESSING ---------- -->
+  <section id="processing-view" class="view">
+    <div class="processing-content">
+      <div class="spinner" aria-hidden="true"></div>
+      <p id="processing-status" class="processing-status">Uploading speech…</p>
+      <p id="processing-meta" class="processing-meta"></p>
+      <ol id="processing-steps" class="processing-steps"></ol>
+      <p class="processing-note">
+        A full pass runs transcription, acoustics, argument extraction and video
+        analysis — a few minutes for a 5-minute speech is normal.
+      </p>
+      <button id="processing-cancel-btn" class="btn btn--ghost btn--sm">Cancel</button>
+    </div>
+  </section>
+
+  <!-- ---------- ERROR ---------- -->
+  <section id="error-view" class="view">
+    <div class="page page--narrow">
+      <h2 class="page-title">Analysis failed</h2>
+      <p class="page-sub">The backend returned an error before it could finish.</p>
+      <pre id="error-detail" class="error-detail"></pre>
+      <div class="btn-row">
+        <button id="error-retry-btn" class="btn btn--primary">Try again</button>
+        <button class="btn btn--ghost" data-goto="library-view">Back to reports</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- REPORT ---------- -->
+  <section id="report-view" class="view">
+    <div class="page">
+      <button class="btn btn--back" data-goto="library-view">← Reports</button>
+      <div id="report-content" class="report-content"></div>
+    </div>
+  </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
