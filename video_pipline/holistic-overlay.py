@@ -6,11 +6,12 @@ mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
 
-def generate_annotated_video(video_path, output_path):
+def generate_annotated_video(video_path, output_path, show_live=True):
     """
     Reads video_path, runs MediaPipe Holistic (face mesh + body pose) on
-    every frame, draws the landmarks directly onto that frame, and writes
-    the annotated result to output_path so it can be played back.
+    every frame, draws the landmarks directly onto that frame, writes the
+    annotated result to output_path, and optionally displays it live in a
+    window while processing.
 
     Returns output_path.
     """
@@ -65,7 +66,16 @@ def generate_annotated_video(video_path, output_path):
 
             writer.write(annotated)
 
+            if show_live:
+                cv2.imshow("MediaPipe Holistic - press Q to stop early", annotated)
+                # waitKey(1) keeps playback moving at roughly video speed;
+                # pressing 'q' stops processing early
+                if cv2.waitKey(1) & 0xFF == ord("q"):
+                    break
+
     cap.release()
     writer.release()
+    if show_live:
+        cv2.destroyAllWindows()
 
     return output_path
