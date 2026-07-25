@@ -10,44 +10,44 @@
 :root {
   color-scheme: light;
 
-  --page:            #f9f9f7;
-  --surface-1:       #fcfcfb;
-  --surface-2:       #f0efec;
-  --text-primary:    #0b0b0b;
-  --text-secondary:  #52514e;
-  --text-muted:      #898781;
-  --gridline:        #e1e0d9;
-  --border:          rgba(11, 11, 11, 0.10);
-  --border-strong:   rgba(11, 11, 11, 0.22);
+  --page:            #efe6d3;
+  --surface-1:       #f8f1e2;
+  --surface-2:       #e3d5b8;
+  --text-primary:    #241b16;
+  --text-secondary:  #5a4a3a;
+  --text-muted:      #8c7a63;
+  --gridline:        #d6c39e;
+  --border:          rgba(36, 27, 22, 0.12);
+  --border-strong:   rgba(36, 27, 22, 0.26);
 
-  /* sequential blue — the one data hue */
-  --data:            #2a78d6;
+  /* sequential wine — the one data hue */
+  --data:            #7a1f2b;
 
   /* status (fixed, never themed) */
-  --good:            #0ca30c;
-  --warning:         #fab219;
-  --critical:        #d03b3b;
+  --good:            #4b6b3a;
+  --warning:         #a9752a;
+  --critical:        #8c2f2f;
 
-  --radius-sm: 6px;
-  --radius:    10px;
-  --radius-lg: 14px;
+  --radius-sm: 4px;
+  --radius:    8px;
+  --radius-lg: 12px;
 
-  --shadow: 0 1px 2px rgba(11, 11, 11, 0.04), 0 1px 8px rgba(11, 11, 11, 0.03);
+  --shadow: 0 1px 2px rgba(36, 27, 22, 0.06), 0 1px 10px rgba(36, 27, 22, 0.05);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     color-scheme: dark;
-    --page:           #0d0d0d;
-    --surface-1:      #1a1a19;
-    --surface-2:      #232322;
-    --text-primary:   #ffffff;
-    --text-secondary: #c3c2b7;
-    --text-muted:     #898781;
-    --gridline:       #2c2c2a;
-    --border:         rgba(255, 255, 255, 0.10);
-    --border-strong:  rgba(255, 255, 255, 0.24);
-    --data:           #3987e5;
+    --page:           #1b1613;
+    --surface-1:      #241d19;
+    --surface-2:      #2e2520;
+    --text-primary:   #f2e9d8;
+    --text-secondary: #cbb99e;
+    --text-muted:     #93816a;
+    --gridline:       #3a2f27;
+    --border:         rgba(242, 233, 216, 0.10);
+    --border-strong:  rgba(242, 233, 216, 0.24);
+    --data:           #c14b58;
     --shadow: none;
   }
 }
