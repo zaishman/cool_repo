@@ -627,6 +627,73 @@ function areiRow(key, value) {
   `;
 }
 
+/* ---------------- playback ----------------
+   Two <video>s over one stage: the submitted recording, and the same footage
+   with the MediaPipe face + pose landmarks burned in by
+   video_pipline/holistic_overlay.py. Switching tabs carries the current
+   playhead across so you can compare the same moment in both. */
+function renderPlayback(report) {
+  const panel = $('playback-panel');
+  const original = $('original-video');
+  const annotated = $('annotated-video');
+  const note = $('playback-note');
+  const tabs = panel.querySelectorAll('.playback-tab');
+
+  const base = apiBase || '';
+  const originalUrl = report.original_video_url ? base + report.original_video_url : null;
+  const annotatedUrl = report.annotated_video_url ? base + report.annotated_video_url : null;
+
+  // Stop whatever was playing from the previously opened report.
+  [original, annotated].forEach(v => { v.pause(); v.removeAttribute('src'); v.load(); });
+
+  if (!originalUrl && !annotatedUrl) {
+    panel.hidden = true;
+    return;
+  }
+  panel.hidden = false;
+
+  if (originalUrl) original.src = originalUrl;
+  if (annotatedUrl) annotated.src = annotatedUrl;
+
+  const available = { original: !!originalUrl, annotated: !!annotatedUrl };
+
+  function selectTrack(track) {
+    if (!available[track]) return;
+    const from = track === 'original' ? annotated : original;
+    const to = track === 'original' ? original : annotated;
+
+    // Same footage, same timeline — keep the playhead when switching.
+    const wasPlaying = !from.paused && !from.ended;
+    if (Number.isFinite(from.currentTime) && from.currentTime > 0) {
+      try { to.currentTime = from.currentTime; } catch { /* metadata not loaded yet */ }
+    }
+    from.pause();
+
+    original.hidden = track !== 'original';
+    annotated.hidden = track !== 'annotated';
+    if (wasPlaying) to.play().catch(() => { /* autoplay blocked — user can hit play */ });
+
+    tabs.forEach(t => {
+      const on = t.dataset.track === track;
+      t.setAttribute('aria-selected', String(on));
+      t.classList.toggle('is-active', on);
+    });
+  }
+
+  tabs.forEach(tab => {
+    const track = tab.dataset.track;
+    tab.disabled = !available[track];
+    tab.title = available[track] ? '' : 'Not available for this report';
+    tab.onclick = () => selectTrack(track);
+  });
+
+  selectTrack(available.original ? 'original' : 'annotated');
+
+  note.textContent = annotatedUrl
+    ? 'Green dots are the 478-point face mesh; orange is the pose skeleton. The overlay track has no audio.'
+    : 'Landmark overlay unavailable for this report — the recording is shown on its own.';
+}
+
 function showReport(report) {
   const meta = report._client || {};
   const acoustics = report.acoustics || {};
@@ -641,6 +708,8 @@ function showReport(report) {
   const when = meta.analyzedAt
     ? new Date(meta.analyzedAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
     : '';
+
+  renderPlayback(report);
 
   /* --- header --- */
   const head = `

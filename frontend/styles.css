@@ -20,7 +20,9 @@
   --border:          rgba(36, 27, 22, 0.12);
   --border-strong:   rgba(36, 27, 22, 0.26);
 
+
   /* sequential wine — the one data hue */
+  /* sequential blue — the one data hue */
   --data:            #7a1f2b;
 
   /* status (fixed, never themed) */
@@ -857,6 +859,7 @@ body.on-landing .topbar { display: none; }
   .segmented { grid-template-columns: repeat(2, 1fr); }
 }
 
+
 /* ----- academic serif headings ----- */
 .wordmark,
 .landing-content h1,
@@ -886,3 +889,72 @@ body.on-landing .topbar { display: none; }
   background: var(--data);
   margin: 18px auto 24px;
 }
+
+/* ---------------- report playback ----------------
+   The recording and the MediaPipe overlay share one stage; only the selected
+   track is visible, so the frame never jumps when you switch tabs. */
+.playback {
+  padding-bottom: 16px;
+}
+
+.playback-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.playback-head .card-title {
+  margin-bottom: 0;
+}
+
+.playback-tabs {
+  display: inline-flex;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  gap: 2px;
+}
+
+.playback-tab {
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 6px 12px;
+  border: 0;
+  border-radius: calc(var(--radius-sm) - 1px);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.playback-tab:hover:not(:disabled) { color: var(--text-primary); }
+
+.playback-tab.is-active {
+  background: var(--surface-1);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+}
+
+.playback-tab:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.playback-stage {
+  background: #000;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.playback-video {
+  display: block;
+  width: 100%;
+  max-height: 62vh;
+  background: #000;
+}
+
+.playback-video[hidden] { display: none; }

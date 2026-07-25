@@ -28,7 +28,7 @@ def split_into_sentences(transcribe_segments):
                 sentences.append(part.strip())
     return sentences
 
-def merge_short_sentences(sentences, min_words=6):
+def merge_short_sentences(sentences, min_words=12):
     merged = []
     buffer = ""
 

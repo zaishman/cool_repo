@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Debate Judge Assistant</title>
+<title>Synthesis</title>
 <link rel="stylesheet" href="styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
 </head>
@@ -13,7 +14,7 @@
   <!-- Persistent top bar. Hidden on the landing view by CSS. -->
   <header id="topbar" class="topbar">
     <div class="topbar-left">
-      <span class="wordmark">Debate Judge Assistant</span>
+      <span class="wordmark">Synthesis</span>
     </div>
     <div class="topbar-right">
       <span id="backend-status" class="status-pill status-pill--unknown">
@@ -25,6 +26,9 @@
   <main>
 
   <!-- ---------- LANDING ---------- -->
+  <section id="landing-view" class="view active-view">
+    <div class="landing-content">
+      <h1>Synthesis</h1>
   <div class="landing-content">
     <p class="landing-eyebrow">An academic scoring assistant</p>
     <h1>Debate Judge Assistant</h1>
@@ -157,12 +161,28 @@
   </section>
 
   <!-- ---------- REPORT ---------- -->
-  <section id="report-view" class="view">
-    <div class="page">
-      <button class="btn btn--back" data-goto="library-view">← Reports</button>
-      <div id="report-content" class="report-content"></div>
+<section id="report-view" class="view">
+  <div class="page">
+    <button class="btn btn--back" data-goto="library-view">← Reports</button>
+    <!-- Playback: the raw recording and the MediaPipe landmark overlay, as two
+         tabs over one stage so they line up frame-for-frame when you switch. -->
+    <div id="playback-panel" class="card playback" hidden>
+      <div class="playback-head">
+        <div class="card-title">Playback</div>
+        <div class="playback-tabs" role="tablist" aria-label="Playback source">
+          <button type="button" class="playback-tab" role="tab" data-track="original" aria-selected="true">Recording</button>
+          <button type="button" class="playback-tab" role="tab" data-track="annotated" aria-selected="false">MediaPipe landmarks</button>
+        </div>
+      </div>
+      <div class="playback-stage">
+        <video id="original-video" class="playback-video" controls playsinline preload="metadata"></video>
+        <video id="annotated-video" class="playback-video" controls playsinline preload="metadata" muted hidden></video>
+      </div>
+      <div id="playback-note" class="explain"></div>
     </div>
-  </section>
+    <div id="report-content" class="report-content"></div>
+  </div>
+</section>
 
   </main>
 
