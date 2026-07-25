@@ -3,7 +3,8 @@ import os
 
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "transcript_pipline"))
 sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "video_pipline"))
-
+from mediapipe_analysis import analyze_video
+from holistic_overlay import generate_annotated_video
 from transcribe import transcribe, split_into_sentences, merge_short_sentences, extract_audio_from_video
 from structure_rules import check_structure_compliance, count_contentions
 from scoring import detect_evidence_combined, count_filler_words, calculate_speaker_points
@@ -87,12 +88,18 @@ def analyse_speech(audio_path, position):
     }
 
 def analyze_full_submission(video_path, position):
-    wav_path = extract_audio_from_video(video_path)  
+    wav_path = extract_audio_from_video(video_path)
     speech_result = analyse_speech(wav_path, position)
     video_result = analyze_video(video_path)
 
+    annotated_filename = f"annotated_{os.path.basename(video_path)}.mp4"
+    annotated_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "static", "annotated")
+    os.makedirs(annotated_dir, exist_ok=True)
+    annotated_path = os.path.join(annotated_dir, annotated_filename)
+    generate_annotated_video(video_path, annotated_path)
+
     return {
         **speech_result,
-        "video_analysis": video_result
+        "video_analysis": video_result,
+        "annotated_video_url": f"/static/annotated/{annotated_filename}"
     }
-
