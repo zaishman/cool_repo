@@ -629,6 +629,15 @@ function areiRow(key, value) {
 
 function showReport(report) {
   const meta = report._client || {};
+  function showReport(report) {
+  const meta = report._client || {};
+  const annotatedVideo = $('annotated-video');
+  if (report.annotated_video_url) {
+    annotatedVideo.src = report.annotated_video_url;
+    annotatedVideo.hidden = false;
+  } else {
+    annotatedVideo.hidden = true;
+  }
   const acoustics = report.acoustics || {};
   const projection = acoustics.projection || {};
   const summary = report.summary || {};
