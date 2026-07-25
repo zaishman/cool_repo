@@ -3,16 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Debate Judge Assistant</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"><link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+<title>Synthesis</title>
+<link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
   <!-- Persistent top bar. Hidden on the landing view by CSS. -->
   <header id="topbar" class="topbar">
     <div class="topbar-left">
-      <span class="wordmark">Debate Judge Assistant</span>
     </div>
     <div class="topbar-right">
       <span id="backend-status" class="status-pill status-pill--unknown">
@@ -24,11 +22,9 @@
   <main>
 
   <!-- ---------- LANDING ---------- -->
-  <div class="landing-content">
-    <p class="landing-eyebrow">An academic scoring assistant</p>
-    <h1>Debate Judge Assistant</h1>
-    <div class="title-rule"></div>
-      <h1>Debate Judge Assistant</h1>
+  <section id="landing-view" class="view active-view">
+    <div class="landing-content">
+      <h1>Synthesis</h1>
       <p class="tagline">
         An AI-assisted scoring tool that analyzes delivery, argumentation, and
         structure from a recorded debate speech — helping judges score more
@@ -165,6 +161,6 @@
 
   </main>
 
-  <script src="{{ url_for('static', filename='app.js') }}"></script>
+  <script src="app.js"></script>
 </body>
 </html>
