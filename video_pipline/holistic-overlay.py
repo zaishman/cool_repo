@@ -8,9 +8,9 @@ mp_drawing_styles = mp.solutions.drawing_styles
 
 def generate_annotated_video(video_path, output_path):
     """
-    Reads video_path, runs MediaPipe Holistic (face mesh + body pose + both
-    hands) on every frame, draws the landmarks directly onto that frame, and
-    writes the annotated result to output_path so it can be played back.
+    Reads video_path, runs MediaPipe Holistic (face mesh + body pose) on
+    every frame, draws the landmarks directly onto that frame, and writes
+    the annotated result to output_path so it can be played back.
 
     Returns output_path.
     """
@@ -30,6 +30,8 @@ def generate_annotated_video(video_path, output_path):
         model_complexity=1,
         enable_segmentation=False,
         refine_face_landmarks=True,
+        min_detection_confidence=0.5,
+        min_tracking_confidence=0.5,
     ) as holistic:
         while True:
             success, frame = cap.read()
@@ -57,6 +59,13 @@ def generate_annotated_video(video_path, output_path):
                     annotated,
                     results.pose_landmarks,
                     mp_holistic.POSE_CONNECTIONS,
-                    landmark_drawing_spec=None,
+                    landmark_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style(),
                     connection_drawing_spec=mp_drawing_styles.get_default_pose_landmarks_style(),
                 )
+
+            writer.write(annotated)
+
+    cap.release()
+    writer.release()
+
+    return output_path
